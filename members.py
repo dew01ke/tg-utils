@@ -2,8 +2,9 @@ import asyncio
 import sys
 from telethon import TelegramClient, events
 
-api_id = 
+api_id =
 api_hash = ''
+target_file = 'members.txt'
 
 async def readline(prompt):
     print(prompt, end='', flush=True)
@@ -27,7 +28,8 @@ def transform_members(members):
     output = []
 
     for member in members:
-        output.append('{} {}'.format(member.id, member.username if member.username else ''))
+        if not member.bot:
+            output.append('{} {}'.format(member.id, member.username if member.username else ''))
 
     return '\r\n'.join(output)
 
@@ -46,6 +48,6 @@ async def main():
     chat = chats[int(index)]
 
     members = await get_members(client, chat)
-    save_to_file('members.txt', transform_members(members))
+    save_to_file(target_file, transform_members(members))
 
 asyncio.run(main())
